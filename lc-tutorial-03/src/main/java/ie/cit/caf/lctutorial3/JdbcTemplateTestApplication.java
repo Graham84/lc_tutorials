@@ -2,6 +2,8 @@ package ie.cit.caf.lctutorial3;
 
 import ie.cit.caf.lctutorial3.domain.Artist;
 import ie.cit.caf.lctutorial3.domain.Movement;
+import ie.cit.caf.lctutorial3.repository.ArtistRepository;
+import ie.cit.caf.lctutorial3.service.ArtistService;
 import ie.cit.caf.rowmapper.ArtistRowMapper;
 import ie.cit.caf.rowmapper.MovementRowMapper;
 
@@ -23,11 +25,16 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 @SpringBootApplication
 public class JdbcTemplateTestApplication implements CommandLineRunner {
 	
-	@Autowired
-	ArtistRepositoy artistRepository;
+
 	
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	ArtistRepository artistRepository;
+	
+	@Autowired
+	ArtistService artistService;
 	
 	@Override
 	public void run(String... arg0) throws Exception {
@@ -37,6 +44,8 @@ public class JdbcTemplateTestApplication implements CommandLineRunner {
 		query04();
 		query05();
 		query06();
+		repositoryExample();
+		serviceExample();
 	}
 	
 	public static void main(String[]args) {
@@ -166,4 +175,37 @@ public class JdbcTemplateTestApplication implements CommandLineRunner {
 		System.out.println(artist.toString());
 	}
 	
+	public void repositoryExample() {
+		Artist artist = artistRepository.get(1);
+		System.out.println(artist.toString());
+		
+		artist.setGender(toggleGender(artist.getGender()));
+		artistRepository.save(artist);
+		
+		Artist newArtist = new Artist();
+		newArtist.setName("Picasso, Pablo");
+		newArtist.setGender("male");
+		artistRepository.save(newArtist);
+		
+		System.out.println("All Artists:");
+		List<Artist> artists = artistRepository.findAll();
+		for (Artist a : artists) {
+			System.out.println(a.toString());
+		}
+	}
+	private String toggleGender(String gender) {
+		if (gender.equals("male")) {
+			return "female";
+		} else {
+			return "male";
+		}
+	}
+	
+	void serviceExample(){
+		Artist a1 = artistService.get(3);
+		a1.setGender(toggleGender(a1.getGender()));
+		artistService.save(a1);
+		
+		System.out.println("\nUpdated via service:\n" + a1.toString());
+	}
 }
