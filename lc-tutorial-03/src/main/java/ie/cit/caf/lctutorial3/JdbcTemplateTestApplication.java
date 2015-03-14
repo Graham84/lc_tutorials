@@ -88,7 +88,7 @@ public class JdbcTemplateTestApplication implements CommandLineRunner {
 		// Old version (now deprecated)
 		String sql = "SELECT count(*) FROM artists";
 		int artistCount = jdbcTemplate.queryForInt(sql);
-		System.out.printf("Number of artists: %d\n", artistCount);
+		System.out.printf("Number of artists: \n", artistCount);
 			
 		// New way
 		sql = "SELECT count(*) FROM movements";
